@@ -28,6 +28,8 @@ In this project, we aim to distinguish 3 different brain tumor types: glioma(mal
 
 ## Dataset
 
+The Brain Tumor MRI Dataset is a collection of 7,023 human brain MRI images, which are categorized into Glioma, Meningioma, No tumor, and Pituitary. This dataset is available on Kaggle and has been provided by MASOUD NICKPARVAR. [View the dataset here](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
+
 
 ## How to use
 ### Getting Started
@@ -50,6 +52,8 @@ Run the following script
 This command will take the data under data/Training and data/Testing as original data and apply some blurring, masking, cropping and resizing to the images and store the resulting images in the generated folders look like Processed_* or Unmasked_Processed_* depending if masking is used. 
 
 --masking would specify is masking is used. If set to True, a kapur thresholding method will be applied on the images and mask the umimport parts.
+
+<img src="media/processed.png" >
 
 
 ### Model Training
