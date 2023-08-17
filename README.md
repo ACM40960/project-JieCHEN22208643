@@ -10,6 +10,8 @@ In this project, we aim to distinguish 3 different brain tumor types: glioma(mal
 
 
 - [Preprocessing](#preprocessing)
+  - [Masking](#masking)
+  - [Data Augmentation](#data-augmentation)
 - [Model](#model)
   - [CNN models](#cnn-models)
   - [Fine-tuning models](#fine-tuning-models)
@@ -27,6 +29,8 @@ The Brain Tumor MRI Dataset is a collection of 7,023 human brain MRI images, whi
 
 ## Preprocessing
 
+### Masking
+
 Run the following script:
 
     ```
@@ -37,9 +41,20 @@ This command will take the data under data/Training and data/Testing as original
 
 --masking would specify is masking is used. If set to True, a kapur thresholding method will be applied on the images and mask the umimport parts.
 
-The following is the processing effect:
+The following is the masking effect:
 
 <img src="media/processed.png" width="800"/>
+
+
+### Data Augmentation
+
+In the data_loader.py file, there is a function named data_generation, which is responsible for generating training and validation data. When the augmentation parameter is set to True, data augmentation is performed. Data augmentation does not need to be executed separately; it can be controlled during model training by using the command-line argument --aug to determine whether to apply data augmentation.
+
+The data augmentation operations set in this project include: random image rotation, random scaling, random cropping, random flipping, and adjusting image brightness.
+
+The following is the data augmentation effect:
+
+<img src="media/augmented.png" width="800"/>
 
 
 ## Model
@@ -88,7 +103,28 @@ To evaluate a specific saved model(weights), simply use:
      python evaluate.py --path models/CNN1_aug/weights-10-0.65.h5
     
 
-where --path specify the path of the saved weights to be evaluated. This code will evaluate this model on the test dataset, print out the confusion matrix and accuracy, precision and recall.
+where --path specify the path of the saved weights to be evaluated. This code will evaluate this model on the test dataset, print out the accuracy, precision and recall and plot confusion matrices.
+
+The output result is as follows:
+
+```text
+Found 1311 images belonging to 4 classes.
+Model successfully built...
+Weights have been loaded, now predicting...
+20/20 [==============================] - 14s 643ms/step
+Precision: 0.8645286854807988 
+
+Recall: 0.8439469862018882 
+
+Accuracy is 0.848207
+```
+
+<div style="display: flex; justify-content: space-between;">
+    <img src="media/4-class.png" width="270" style="margin-right: 10px;">
+    <img src="media/3-class.png" width="265" style="margin-right: 10px;">
+    <img src="media/2-class.png" width="280">
+</div>
+
 
 ### Prediction
 
@@ -100,3 +136,8 @@ To classify new images in a specific folder (default folder is data/Predict, can
 
 prediction results will be printed and all images will be stored under new names where their predicted tumor type will be included in their new file names.
 
+The output result is as follows:
+
+```text
+@@@@@@@Image: Tr-gl_0010.jpg, Predicted Class:glioma with probability 0.9999894
+```
