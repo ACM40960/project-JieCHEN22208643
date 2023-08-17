@@ -8,22 +8,16 @@ In this project, we aim to distinguish 3 different brain tumor types: glioma(mal
 
 - [Dataset](#dataset)
 
-- [How to Use](#how-to-use)
-    - [Getting Started](#getting-started)
-    - [Preprocessing](#preprocessing)
-    - [Model Training](#model-training)
-    - [Evaluation](#evaluation)
-    - [Rrediction](#prediction)
-- [Image Processing](#page-setup)
+
+- [Preprocessing](#preprocessing)
+- [Model](#model)
+  - [CNN models](#cnn-models)
+  - [Fine-tuning models](#fine-tuning-models)
+- [Training](#training)
+- [Evaluation](#evaluation)
+- [Prediction](#prediction)
 
 
-- [Model Structures](#model-structure)
-    - [CNN models](#cnn-model)
-    - [Fine-tuning models](#cnn-model)    
-- [Performance](#performance)
-
-
-- [References](#References)
 
 
 ## Dataset
@@ -31,35 +25,55 @@ In this project, we aim to distinguish 3 different brain tumor types: glioma(mal
 The Brain Tumor MRI Dataset is a collection of 7,023 human brain MRI images, which are categorized into Glioma, Meningioma, No tumor, and Pituitary. This dataset is available on Kaggle and has been provided by MASOUD NICKPARVAR. [View the dataset here](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
 
 
-## How to use
-### Getting Started
+## Preprocessing
 
-Install the required packages for python in your current environment or create a new environment for this program.
-
-    ```
-    pip install -r requirements.txt
-    ```
-
-
-### Preprocessing
-
-Run the following script
+Run the following script:
 
     ```
-    python preprosessing.py --masking 0
+    python preprosessing.py --masking 1
     ```
 
 This command will take the data under data/Training and data/Testing as original data and apply some blurring, masking, cropping and resizing to the images and store the resulting images in the generated folders look like Processed_* or Unmasked_Processed_* depending if masking is used. 
 
 --masking would specify is masking is used. If set to True, a kapur thresholding method will be applied on the images and mask the umimport parts.
 
-<img src="media/processed.png" >
+The following is the processing effect:
+
+<img src="media/processed.png" width="800"/>
 
 
-### Model Training
+## Model
 
-    
-     python train.py --model CNN1 --bs 64 --epoch 10 --aug False --c False --lr 0.00001
+In the model.py file, a total of four models have been constructed – two distinct CNN models and two fine-tuning models that utilize different pre-trained deep learning models as feature extractor.
+
+### CNN models
+
+The model structures of CNN1 and CNN2 are entirely different. CNN1 comprises five convolutional layers, with a max pooling 2D layer after the second and last convolutional layers respectively. The dropout layer for regularization after the third fully connected layer. CNN2 features three consecutive **conv-pooling-batch normalization blocks**. In CNN2, the convolutional layers employ larger kernels for swift dimension reduction. There are three fully connected layers, with a dropout layer each after the first two fully connected layers for regularization. These two models possess 3,730,932 and 3,943,108 parameters respectively.
+
+The structure of the CNN1 model:
+
+<img src="media/CNN1.png" width="600"/>
+
+
+The structure of the CNN2 model:
+
+<img src="media/CNN2.png" width="600"/>
+
+
+### Fine-tuning models
+
+The two fine-tuning models utilize **VGG19** and **InceptionV3** as feature extractors, respectively, followed by the construction of a 5-layer CNN classifier. Both VGG19 and InceptionV3 utilize weights pre-trained on ImageNet.
+
+The structure of the fine-tuning model:
+
+<img src="media/finetuning.png" width="450"/>
+
+
+## Training
+
+    ```
+    python train.py --model CNN1 --bs 64 --epoch 10 --aug False --c False --lr 0.00001
+    ```
     
 This piece of code would train a model of type "CNN1" (--model argument), with learning rate (lr) of 0.00001. --bs, --epoch with specify the batch size and epoch number for training. --aug indicates if data augmentation is used, and -c will instruct if the model would continue training from a previously trained model by loading weights from that model(computer will look for the model with the best performance from the folder).
 
